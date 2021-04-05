@@ -3,6 +3,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
 )
@@ -13,7 +14,7 @@ var DB *gorm.DB
 // struct to define DB parameters
 type DBConfig struct {
 	Host     string
-	Port     int
+	Port     string
 	User     string
 	DBName   string
 	Password string
@@ -23,11 +24,11 @@ type DBConfig struct {
 // Set configuretion to DB
 func GetConfig() *DBConfig {
 	dbConfig := &DBConfig{
-			Host:     "localhost",
-			Port:     3306,
-			User:     "root",
-			DBName:   "cidenet_db",
-			Password: "aarizat",
+			Host:     os.Getenv("HOST"),
+			Port:     os.Getenv("PORT"),
+			User:     os.Getenv("USER"),
+			DBName:   os.Getenv("DATABASE"),
+			Password: os.Getenv("PASSWORD"),
 		}
 	return dbConfig
 }
@@ -36,7 +37,7 @@ func GetConfig() *DBConfig {
 // connect to database
 func DbURL(dbConfig *DBConfig) string {
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		dbConfig.User,
 		dbConfig.Password,
 		dbConfig.Host,
